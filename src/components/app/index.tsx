@@ -2,18 +2,26 @@ import { useEffect, useState } from "react"
 import { API } from "Api"
 import reactLogo from "./assets/react.svg"
 import { IUsers } from "src/types/types"
+import { RootStore } from "src/store"
+import { observer } from "mobx-react-lite"
 
-function App() {
-  const [count, setCount] = useState(0)
-  useEffect(() => {
-    const a = async () => {
-      const res = await API.get<IUsers>("users")
-      console.log("res", res)
-    }
-    a()
-  }, [])
+const store = RootStore.create({})
 
-  return <div className="App">Hy</div>
-}
+export const App = observer(() => {
+  console.log("store", store.users.users)
 
-export default App
+  return (
+    <div className="App">
+      {store.users.users?.map((item) => {
+        return (
+          <>
+            <div>{item.id}</div>
+            <img src={item.avatar} alt="avatar" />
+            <div>{item.name}</div>
+            <div>{item.createdAt}</div>
+          </>
+        )
+      })}
+    </div>
+  )
+})
