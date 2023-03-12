@@ -14,12 +14,12 @@ export const App = observer(() => {
     <div className="App">
       {store.users.users?.map((item) => {
         return (
-          <>
+          <div key={item.id}>
             <div>{item.id}</div>
             <img src={item.avatar} alt="avatar" />
             <div>{item.name}</div>
             <div>{item.createdAt}</div>
-          </>
+          </div>
         )
       })}
     </div>
