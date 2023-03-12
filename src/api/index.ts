@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios"
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 import qs from "query-string"
 
 export const ENDPOINT = "http://localhost:3001"
@@ -10,8 +10,12 @@ class Api {
     this.domain = domain
   }
 
-  perform = async (url: string, data?: unknown, config?: AxiosRequestConfig<any> | undefined) => {
-    const req = axios(`${this.domain}/${url}`, {
+  perform = async <T>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig<any>
+  ): Promise<AxiosResponse<T, any>> => {
+    const req = axios<T>(`${this.domain}/${url}`, {
       ...config,
       headers: {
         "Content-Type": "application/json",
@@ -20,10 +24,14 @@ class Api {
     return await req
   }
 
-  get = async (path: string, searchParams?: Record<string, string>) => {
+  identity = <T>(arg: T): T => {
+    return arg
+  }
+
+  get = async <T>(path: string, searchParams?: Record<string, string>) => {
     const params = searchParams ? qs.stringify(searchParams) : ""
 
-    const { data } = await this.perform(`${path}${params}`)
+    const { data } = await this.perform<T>(`${path}${params}`)
 
     return data
   }
